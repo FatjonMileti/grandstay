@@ -5,6 +5,7 @@
 # .NET build output
 api/bin/
 api/obj/
+api/.nuget-cache/
 api/publish/
 *.user
 *.suo
