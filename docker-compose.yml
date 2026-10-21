@@ -1,0 +1,51 @@
+name: grandstay
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: grandstay-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  api:
+    build:
+      context: ./api
+    container_name: grandstay-api
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      MongoDB__ConnectionString: mongodb://mongo:27017
+      MongoDB__Database: grandstay
+      Jwt__Key: ${JWT_KEY:-grandstay-docker-dev-signing-key-change-before-production-4f8a6c0e9d7b3a5f1c8e}
+      Jwt__Issuer: GrandStay.Api
+      Jwt__Audience: GrandStay.Web
+      Cors__AllowedOrigins__0: http://localhost:3001
+      Cors__AllowedOrigins__1: http://127.0.0.1:3001
+    ports:
+      - "5000:8080"
+
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000/api}
+    container_name: grandstay-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "3001:3000"
+
+volumes:
+  mongo-data:

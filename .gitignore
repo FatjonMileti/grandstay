@@ -1,0 +1,51 @@
+# Local MongoDB data
+.mongo-data/
+*.log
+
+# .NET build output
+api/bin/
+api/obj/
+api/publish/
+*.user
+*.suo
+
+# Test output
+TestResults/
+*.trx
+*.coverage
+coverage/
+
+# Node.js
+node_modules/
+.turbo/
+.cache/
+
+# Next.js
+web/.next/
+web/out/
+web/build/
+web/tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Environment files
+.env*
+!.env.example
+
+# Local Docker overrides
+docker-compose.override.yml
+compose.override.y*ml
+
+# Process files
+*.pid
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
